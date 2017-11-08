@@ -1,9 +1,10 @@
-from crosscorrelate import multi_core_test
+from crosscorrelate import test_against_real_data
 import numpy as np
 import random
 import time
 import csv
 import os
+from multiprocessing import Pool
 
 
 def create_population(size):
@@ -146,6 +147,42 @@ if __name__ == '__main__':
 
     print "%-15s %-15s %-15s %-45s" % ('Number', 'pop size', 'Cores', 'Generations')
     print "%-15s %-15s %-15s %-45s" % (max, pop, cores, gens)
+
+    pool = Pool(processes=cores)
+
+    def multi_core_test(cores, max, params_vector):
+        #TODO change this so params can be any size
+        params = {
+            'v1a': params_vector[0],
+            'v1b': params_vector[1],
+            'age_offset': params_vector[2],
+            'v1c': params_vector[3],
+            'lbm_offset': params_vector[4],
+            'v2a': params_vector[5],
+            'v3a':  params_vector[6],
+            'k10a': params_vector[7],
+            'k12': params_vector[8],
+            'k13': params_vector[9],
+        }
+
+        step_size = max / cores
+        step_size = int(step_size)
+
+        jobs = []
+        for idx in range(cores):
+            a = step_size * idx + 1
+            b = step_size * (idx + 1)
+            if idx == (cores-1):
+                b = max
+            thing = (a, b, params)
+            jobs.append(thing)
+
+        results = pool.map(test_against_real_data, jobs)
+        rms = sum([thing[0] for thing in results]) * 0.2
+
+
+
+        return rms
 
 
     fittest_set = []
