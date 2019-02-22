@@ -3,4 +3,7 @@
 .~lock*
 
 results/*
-!results/.gitkeep 
+!results/.gitkeep
+
+*.vscode
+* __pycache__
