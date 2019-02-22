@@ -208,18 +208,18 @@ class MarshState:
 
 if __name__ == '__main__':
     patient = PatientState.with_schnider_params(34, 46.3, 157.5, "f")
-    print "Initial state: " + str(patient)
+    print ("Initial state: " + str(patient))
 
     patient.give_drug(90)
-    print "After giving drug: " + str(patient)
+    print ("After giving drug: " + str(patient))
 
     times = [126, 240, 483, 962, 1803, 3583]
     
     patient2 = MarshState.with_marsh_params(34, 46.3, 157.5, "f")
-    print "Initial state: " + str(patient2)
+    print ("Initial state: " + str(patient2))
 
     patient2.give_drug(90)
-    print "After giving drug: " + str(patient2)
+    print ("After giving drug: " + str(patient2))
 
     times = [126, 240, 483, 962, 1803, 3583] 
 
@@ -230,4 +230,4 @@ if __name__ == '__main__':
         #print str(t) + str(patient)
         mod = t % 30
         if mod == 0:
-            print str(t) + str(patient) + str(patient2)
+            print (str(t) + str(patient) + str(patient2))
