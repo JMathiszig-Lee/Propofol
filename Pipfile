@@ -9,6 +9,8 @@ black = "*"
 [packages]
 pytci = "*"
 numpy = "*"
+jupyter = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"
