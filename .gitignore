@@ -7,3 +7,5 @@ results/*
 
 *.vscode
 * __pycache__
+*ipnynb_checkpoints
+*.ipnyb

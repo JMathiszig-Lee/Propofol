@@ -4,7 +4,7 @@ import random
 import time
 import csv
 import os
-import requests
+#import requests
 from multiprocessing import Pool
 
 
@@ -24,10 +24,10 @@ def create_population(size):
     return pop_list
 
 
-def create_new_set():
+def create_new_set(setlength):
     new_set = []
     for i in range(setlength):
-        new_set.append(random.uniform(0, 1))
+        new_set.append(round(random.random(),4))
     count = 0
     for k in new_set:
         i = round(k, 4)
@@ -37,12 +37,11 @@ def create_new_set():
         return new_set
 
 
-def create_new_population(size):
+def create_new_population(size, setlength):
     pop_size = size
-
     pop_list = []
     for i in range(pop_size):
-        newparam = create_new_set()
+        newparam = create_new_set(setlength)
         pop_list.append(newparam)
     return pop_list
 
@@ -91,7 +90,7 @@ def mutate_population(children, fittest, second, mutants):
             chrome = chrome * np.random.normal(1, 0.1)
         else:
             chrome = chrome * 1
-        return chrome
+        return round(chrome, 6)
 
     # breed parents to create children
     def breed(sprogs, p1, p2):
@@ -114,8 +113,8 @@ def mutate_population(children, fittest, second, mutants):
     breed(children, fittest, second)
 
     # immigration to escape local minima
-    rand1 = create_new_set()
-    rand2 = create_new_set()
+    rand1 = create_new_set(len(fittest))
+    rand2 = create_new_set(len(fittest))
 
     pop_list.append(rand1)
     pop_list.append(rand2)
@@ -192,8 +191,8 @@ if __name__ == '__main__':
     PROCESSES = cores
     pool = Pool(PROCESSES)
 
-    print "%-15s %-15s %-15s %-45s" % ('Number', 'pop size', 'Cores', 'Generations')
-    print "%-15s %-15s %-15s %-45s" % (max, pop, cores, gens)
+    #print "%-15s %-15s %-15s %-45s" % ('Number', 'pop size', 'Cores', 'Generations')
+    #print "%-15s %-15s %-15s %-45s" % (max, pop, cores, gens)
 
     fittest_set = []
     second_set = []
@@ -233,11 +232,11 @@ if __name__ == '__main__':
             if max_tries == 10:
                 quit()
 
-            print "trying again"
+            #print "trying again"
 
         gen = 0
-        print "%-5s %-15s %-15s %-45s" % ('Gen', 'Best', 'Second', 'Set')
-        print "%-5s %-15s %-15s %-45s" % (gen, best_fitness[1], second_fitness[1], fittest_set)
+        #print "%-5s %-15s %-15s %-45s" % ('Gen', 'Best', 'Second', 'Set')
+        #print "%-5s %-15s %-15s %-45s" % (gen, best_fitness[1], second_fitness[1], fittest_set)
 
         for i in range(gens):
 
@@ -260,7 +259,7 @@ if __name__ == '__main__':
             second_set = fit_results[2]
             second_fitness = fit_results[3]
 
-            print "%-5s %-15s %-15s %-45s" % (gen, best_fitness[1], second_fitness[1], fittest_set)
+            #print "%-5s %-15s %-15s %-45s" % (gen, best_fitness[1], second_fitness[1], fittest_set)
             wr.writerow(fit_results)
 
         # post data to microservice
@@ -273,4 +272,4 @@ if __name__ == '__main__':
 
 
         r = requests.post(url, json = payload)
-        print r.text
+        #print r.text

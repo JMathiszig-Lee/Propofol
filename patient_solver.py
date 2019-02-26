@@ -94,3 +94,7 @@ def solve_for_schnider(patient, params):
 def solve_for_marsh(patient, params):
     patient_model = propofol.Marsh(patient["weight"])
     return solve_for_patient(patient_model, patient["events"])
+
+def solve_for_custom(patient, params):
+    patient_model = propofol.Marsh(patient["weight"])
+    return solve_for_patient(patient_model, patient["events"])
