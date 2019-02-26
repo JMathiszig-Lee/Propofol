@@ -3,4 +3,9 @@
 .~lock*
 
 results/*
-!results/.gitkeep 
+!results/.gitkeep
+
+*.vscode
+* __pycache__
+*ipnynb_checkpoints
+*.ipnyb
