@@ -139,30 +139,18 @@ def mutate_population(children, fittest, second, mutants):
     return pop_list
 
 
-def multi_core_test(cores, max, params_vector):
+def multi_core_test(cores, maxpt, params):
     # TODO change this so params can be any size
-    params = {
-        'v1a': params_vector[0],
-        'v1b': params_vector[1],
-        'age_offset': params_vector[2],
-        'v1c': params_vector[3],
-        'lbm_offset': params_vector[4],
-        'v2a': params_vector[5],
-        'v3a':  params_vector[6],
-        'k10a': params_vector[7],
-        'k12': params_vector[8],
-        'k13': params_vector[9],
-    }
 
-    step_size = max / cores
-    step_size = int(step_size)
+    step_size = round(maxpt / cores)
 
     jobs = []
+
     for idx in range(cores):
         a = step_size * idx + 1
         b = step_size * (idx + 1)
         if idx == (cores-1):
-            b = max
+            b = maxpt
         thing = (a, b, params)
         jobs.append(thing)
 
