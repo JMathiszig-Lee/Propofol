@@ -9,3 +9,9 @@ results/*
 * __pycache__
 *ipnynb_checkpoints
 *.ipnyb
+
+line_profiler
+
+.ipnynb_checkpoints
+
+

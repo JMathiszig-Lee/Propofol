@@ -154,6 +154,8 @@ def multi_core_test(cores, maxpt, params):
         thing = (a, b, params)
         jobs.append(thing)
 
+    pool = Pool(cores)
+    
     results = pool.map(test_against_real_data, jobs)
 
     # make this dynamic, cast to float?
