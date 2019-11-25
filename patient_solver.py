@@ -50,17 +50,19 @@ def solve_for_patient(patient, events):
 
             # print "Predicted: %f, Actual: %f" % (predicted_cp, event['cp'])
 
-            error = error ** 2
-            error = math.sqrt(error)
+
+            ##commenting out this as most of the studies dont do this. ?? why
+            # error = error ** 2
+            # error = math.sqrt(error)
 
             total_lsq_error += error
             total_measurements += 1
 
             percent_error = error / event["cp"]
-            if percent_error < 0:
-                print(percent_error)
+            # if percent_error < 0:
+            #     print(percent_error)
 
-            absolutelist.append(percent_error)
+            absolutelist.append(abs(percent_error))
 
             total_percent_error += percent_error
 
