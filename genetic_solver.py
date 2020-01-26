@@ -6,7 +6,7 @@ import csv
 import os
 #import requests
 from multiprocessing import Pool
-
+import statistics
 
 def create_population(size):
     params = [0.443, 0.0107, -0.0159, 0.0062, 0.302, -0.0056, 0.196, 1.29, -0.024, 18.9, -0.391, 0.0035, 4.27, 238, 53, 77, 59, 177]

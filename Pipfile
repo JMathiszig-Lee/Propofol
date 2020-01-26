@@ -12,6 +12,8 @@ numpy = "*"
 jupyter = "*"
 matplotlib = "*"
 line-profiler = "*"
+sklearn = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"

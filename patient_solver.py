@@ -2,14 +2,12 @@ from patient_state import PatientState, PatientState2, MarshState
 
 import math
 import statistics
+import numpy
 
 from PyTCI.models import propofol
-
+from sklearn.linear_model import LinearRegression
 
 def solve_for_patient(patient, events):
-    # print "Patient %s" % patient["id"]
-
-    # patient_model = PatientState2(patient['age'], patient['weight'], patient['height'], patient['sex'], params)
     patient_model = patient
 
     results = {"cps": []}
@@ -23,6 +21,7 @@ def solve_for_patient(patient, events):
     infusion_seconds_remaining = 0
 
     absolutelist = []
+    timeslist = []
     biaslist = []
 
     for event in events:
@@ -35,36 +34,24 @@ def solve_for_patient(patient, events):
 
         if event["type"] == "measurement":
             predicted_cp = patient_model.x1
+            seconds = int(previous_time_mins * 60) + t
+            
             error = event["cp"] - predicted_cp
-
             percent_error = error / event["cp"]
-            biaslist.append(error)
+            
 
             results["cps"].append(
                 {
-                    "time_seconds": int(previous_time_mins * 60) + t,
+                    "time_seconds": seconds,
                     "predicted_cp": predicted_cp,
                     "measured_cp": event["cp"],
+                    "performance_error": percent_error
                 }
             )
 
-            # print "Predicted: %f, Actual: %f" % (predicted_cp, event['cp'])
-
-
-            ##commenting out this as most of the studies dont do this. ?? why
-            # error = error ** 2
-            # error = math.sqrt(error)
-
-            total_lsq_error += error
-            total_measurements += 1
-
-            percent_error = error / event["cp"]
-            # if percent_error < 0:
-            #     print(percent_error)
-
+            biaslist.append(error)
             absolutelist.append(abs(percent_error))
-
-            total_percent_error += percent_error
+            timeslist.append(seconds)
 
         elif event["type"] == "start_infusion":
             amount_mg = event["propofol_mg"]
@@ -78,10 +65,19 @@ def solve_for_patient(patient, events):
 
         previous_time_mins = event["time_mins"]
 
-    results["error"] = total_lsq_error / total_measurements
-    results["percent"] = total_percent_error / total_measurements
     results["median"] = statistics.median(absolutelist)
     results["bias"] = statistics.median(biaslist)
+
+    #double check this before submitting for publication
+    wobble = [(results["bias"] - x)/results["bias"] for x in absolutelist]
+    results["wobble"] = abs(statistics.median(wobble))
+
+    #do linear regression for divergence
+    Xs = numpy.reshape(timeslist, (-1, 1))
+    ys = numpy.reshape(absolutelist, (-1, 1))
+    divergence = LinearRegression().fit(Xs, ys)
+    results["divergence"] = divergence.coef_[0][0]
+
     return results
 
 
@@ -95,6 +91,10 @@ def solve_for_schnider(patient, params):
 
 def solve_for_marsh(patient, params):
     patient_model = propofol.Marsh(patient["weight"])
+    return solve_for_patient(patient_model, patient["events"])
+
+def solve_for_kataria(patient, params):
+    patient_model = propofol.Kataria(patient["weight"], patient["age"])
     return solve_for_patient(patient_model, patient["events"])
 
 def solve_for_custom(patient, params):
