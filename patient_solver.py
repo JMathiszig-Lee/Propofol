@@ -6,6 +6,8 @@ import numpy
 
 from PyTCI.models import propofol
 from sklearn.linear_model import LinearRegression
+from scipy import stats
+
 
 def solve_for_patient(patient, events):
     patient_model = patient
@@ -20,6 +22,7 @@ def solve_for_patient(patient, events):
     current_dose_mg_per_sec = 0
     infusion_seconds_remaining = 0
 
+    errorlist = []
     absolutelist = []
     timeslist = []
     biaslist = []
@@ -52,6 +55,7 @@ def solve_for_patient(patient, events):
             biaslist.append(error)
             absolutelist.append(abs(percent_error))
             timeslist.append(seconds)
+            errorlist.append(percent_error)
 
         elif event["type"] == "start_infusion":
             amount_mg = event["propofol_mg"]
@@ -69,14 +73,16 @@ def solve_for_patient(patient, events):
     results["bias"] = statistics.median(biaslist)
 
     #double check this before submitting for publication
-    wobble = [(results["bias"] - x)/results["bias"] for x in absolutelist]
-    results["wobble"] = abs(statistics.median(wobble))
+    #https://link.springer.com/article/10.1007%2Fs10877-015-9776-6
+    results["wobble"] = stats.median_absolute_deviation(errorlist)
 
     #do linear regression for divergence
     Xs = numpy.reshape(timeslist, (-1, 1))
     ys = numpy.reshape(absolutelist, (-1, 1))
-    divergence = LinearRegression().fit(Xs, ys)
-    results["divergence"] = divergence.coef_[0][0]
+    # divergence = LinearRegression().fit(Xs, ys)
+    #multiply by 3600 to covert to hours not seconds
+    # results["divergence"] = divergence.coef_[0][0] * 3600
+    results["divergence"] = 0
 
     return results
 
