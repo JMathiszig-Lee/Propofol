@@ -4,19 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "*"
 
 [packages]
-pytci = "*"
-numpy = "*"
-jupyter = "*"
+scipy = "*"
 matplotlib = "*"
-line-profiler = "*"
+notebook = "*"
+pytci = "*"
 sklearn = "*"
-black = "*"
+b3bb076 = {path = "./line_profiler"}
 
 [requires]
-python_version = "3.7"
-
-[pipenv]
-allow_prereleases = true
+python_version = "3.8"
