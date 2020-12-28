@@ -95,6 +95,8 @@ def solve_for_marsh(patient, params):
 
 def solve_for_kataria(patient, params):
     patient_model = propofol.Kataria(patient["weight"], patient["age"])
+def solve_for_eleveld(patient, params):
+    patient_model = propofol.Eleveld(patient["age"], patient["weight"], patient["height"], patient["sex"])
     return solve_for_patient(patient_model, patient["events"])
 
 def solve_for_custom(patient, params):
