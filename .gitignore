@@ -11,7 +11,7 @@ results/*
 *.ipnyb
 
 line_profiler
-
-.ipnynb_checkpoints
-
+__pycache__
+.ipynb_checkpoints/
+%SystemDrive%
 
