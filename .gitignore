@@ -12,6 +12,6 @@ results/*
 
 line_profiler
 
-.ipnynb_checkpoints
-
+.ipynb_checkpoints
+%SystemDrive%
 
