@@ -40,7 +40,7 @@ def solve_for_patient(patient, events):
             seconds = int(previous_time_mins * 60) + t
             
             error = event["cp"] - predicted_cp
-            percent_error = error / event["cp"]
+            percent_error = error / predicted_cp
             
 
             results["cps"].append(
@@ -69,42 +69,17 @@ def solve_for_patient(patient, events):
 
         previous_time_mins = event["time_mins"]
 
-    results["median"] = statistics.median(absolutelist)
-    results["bias"] = statistics.median(biaslist)
+    results["MDPE"] = statistics.median(errorlist)
+    results["MDAPE"] = statistics.median(absolutelist)
+    results["Wobble"] = stats.median_absolute_deviation(errorlist)
 
-    #double check this before submitting for publication
-    #https://link.springer.com/article/10.1007%2Fs10877-015-9776-6
-    results["wobble"] = stats.median_absolute_deviation(errorlist)
-
-    #do linear regression for divergence
-    Xs = numpy.reshape(timeslist, (-1, 1))
-    ys = numpy.reshape(absolutelist, (-1, 1))
+    # #do linear regression for divergence
+    # Xs = numpy.reshape(timeslist, (-1, 1))
+    # ys = numpy.reshape(absolutelist, (-1, 1))
     # divergence = LinearRegression().fit(Xs, ys)
-    #multiply by 3600 to covert to hours not seconds
-    # results["divergence"] = divergence.coef_[0][0] * 3600
-    results["divergence"] = 0
+    # #multiply by 3600 to covert to hours not seconds
+    # results["Divergence"] = divergence.coef_[0][0] * 3600
+  
+    results["Divergence"] = 0
 
     return results
-
-
-def solve_for_schnider(patient, params):
-
-    patient_model = propofol.Schnider(
-        patient["age"], patient["weight"], patient["height"], patient["sex"]
-    )
-    return solve_for_patient(patient_model, patient["events"])
-
-
-def solve_for_marsh(patient, params):
-    patient_model = propofol.Marsh(patient["weight"])
-    return solve_for_patient(patient_model, patient["events"])
-
-def solve_for_kataria(patient, params):
-    patient_model = propofol.Kataria(patient["weight"], patient["age"])
-def solve_for_eleveld(patient, params):
-    patient_model = propofol.Eleveld(patient["age"], patient["weight"], patient["height"], patient["sex"])
-    return solve_for_patient(patient_model, patient["events"])
-
-def solve_for_custom(patient, params):
-    patient_model = propofol.Marsh(patient["weight"])
-    return solve_for_patient(patient_model, patient["events"])
