@@ -1,5 +1,4 @@
 import csv
-from patient_state import PatientState
 
 csvfile = "propofol.csv"
 
