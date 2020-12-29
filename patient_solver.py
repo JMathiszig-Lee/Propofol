@@ -36,17 +36,16 @@ def solve_for_patient(patient, events):
         if event["type"] == "measurement":
             predicted_cp = patient_model.x1
             seconds = int(previous_time_mins * 60) + t
-            
+
             error = event["cp"] - predicted_cp
             percent_error = error / predicted_cp
-            
 
             results["cps"].append(
                 {
                     "time_seconds": seconds,
                     "predicted_cp": predicted_cp,
                     "measured_cp": event["cp"],
-                    "performance_error": percent_error
+                    "performance_error": percent_error,
                 }
             )
 
@@ -77,7 +76,7 @@ def solve_for_patient(patient, events):
     # divergence = LinearRegression().fit(Xs, ys)
     # #multiply by 3600 to covert to hours not seconds
     # results["Divergence"] = divergence.coef_[0][0] * 3600
-  
+
     results["Divergence"] = 0
 
     return results
