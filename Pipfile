@@ -11,7 +11,7 @@ matplotlib = "*"
 notebook = "*"
 pytci = "*"
 sklearn = "*"
-b3bb076 = {path = "./line_profiler"}
+flake8 = "*"
 
 [requires]
 python_version = "3.8"
