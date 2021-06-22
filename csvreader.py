@@ -1,7 +1,7 @@
 import csv
 
 
-def read_patient_csv(pk_file="propofol.csv"):
+def read_patient_csv(pk_file="data/propofol.csv"):
     with open(pk_file, mode="r") as pk_csv:
         patients = []
         pid = None

@@ -1,12 +1,8 @@
 import statistics
 import numpy as np
 
-from PyTCI import propofol
-from sklearn.utils import resample
-
+from PyTCI.models import propofol
 from patient_solver import solve_for_patient
-
-
 
 def compare_models(patients: list, model:str ='Marsh'):
     """
@@ -53,12 +49,16 @@ def compare_models(patients: list, model:str ='Marsh'):
             
         res =  solve_for_patient(patient_model, patient["events"])
 
-        patient_level.append({"patient": patient["ID"], "results": res})
+        patient_level.append({"patient": patient["id"], "results": {
+            "MDPE": res["MDPE"],
+            "MDAPE": res["MDAPE"],
+            "Wobble": res["Wobble"]
+        }})
 
         
-        MDPE.append(res["bias"])
-        MDAPE.append(res["median"])
-        wobble.append(res["wobble"])
+        MDPE.append(res["MDPE"])
+        MDAPE.append(res["MDAPE"])
+        wobble.append(res["Wobble"])
         
     MDPE = statistics.median(MDPE)
     MDAPE = statistics.median(MDAPE)
@@ -79,7 +79,3 @@ def compare_models(patients: list, model:str ='Marsh'):
     } 
 
     return result_dict
-
-
-def bootstrap():
-    pass
