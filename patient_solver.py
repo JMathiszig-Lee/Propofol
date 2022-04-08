@@ -1,9 +1,5 @@
-import math
 import statistics
-import numpy
 
-from PyTCI.models import propofol
-from sklearn.linear_model import LinearRegression
 from scipy import stats
 
 
@@ -11,10 +7,6 @@ def solve_for_patient(patient, events):
     patient_model = patient
 
     results = {"cps": []}
-
-    total_lsq_error = 0
-    total_measurements = 0
-    total_percent_error = 0
 
     previous_time_mins = 0
     current_dose_mg_per_sec = 0
@@ -70,13 +62,10 @@ def solve_for_patient(patient, events):
     results["MDAPE"] = statistics.median(absolutelist)
     results["Wobble"] = stats.median_absolute_deviation(errorlist)
 
-    # #do linear regression for divergence
-    # Xs = numpy.reshape(timeslist, (-1, 1))
-    # ys = numpy.reshape(absolutelist, (-1, 1))
-    # divergence = LinearRegression().fit(Xs, ys)
-    # #multiply by 3600 to covert to hours not seconds
-    # results["Divergence"] = divergence.coef_[0][0] * 3600
+    slope, intercept, r_value, p_value, std_err = stats.linregress(
+        timeslist, absolutelist
+    )
 
-    results["Divergence"] = 0
+    results["Divergence"] = slope * 3600
 
     return results
